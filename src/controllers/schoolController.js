@@ -6,7 +6,7 @@ export const addSchool = async (req, res) => {
   const { name, address, latitude, longitude } = req.body;
   
   try{
-    const [existing] = await db.query("SELECT * FROM schools WHERE name = ? AND address = ? AND latitude = ? AND longitude = ?" , [name, address, latitude, longitude]);
+    const [existing] = await db.query("SELECT * FROM schools WHERE name = ? AND address = ? AND ABS(latitude - ?) < 0.00001 AND ABS(longitude - ?) < 0.00001" , [name, address, latitude, longitude]);
     if(existing.length > 0){
         return res.status(409).send({success:false , message:"School already exists in our database"})
     }
